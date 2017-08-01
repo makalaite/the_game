@@ -1,0 +1,46 @@
+#register
+{
+    border-radius: 2px;
+    width: 500px;
+    height: 400px;
+    border: solid darkslategrey 1px;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Indie Flower', cursive;
+
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 150px;
+    margin-left: 80px;
+    background-color: lightblue;
+
+}
+
+#name
+{
+    text-align: center;
+    font-family: 'Indie Flower', cursive;
+    font-weight: bold;
+    width: 173px;
+    margin-top: 52px;
+    margin-bottom: 21px;
+    margin-right: 132px;
+    margin-left: 163px;
+
+}
+
+.hidden
+{
+    display: none;
+}
+
+#level
+{
+    border-radius: 2px;
+    width: 500px;
+    height: 400px;
+    border: solid darkslategrey 1px;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Indie Flower', cursive;
+}
