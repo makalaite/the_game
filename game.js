@@ -104,8 +104,6 @@ var FastTyping = function () {
         }
     };
 
-
-
     var levelSelection = new LevelSelectionLogics();
 
     //---------------------------------------------------------------- THE GAME ----------------------------------------------------------
@@ -113,42 +111,93 @@ var FastTyping = function () {
     var GameLogics = function ()
     {
         var view = $('#game');
-        var letters = ['ABCDEFGHIJKLMNPRSTUVWXYZ'];
+        var letters = 'abcdefghijklmnprstuvwxyz';
         var timeOut;
         var letterPlacement = $('#letter');
         var letterKey;
+        var liveCount;
+        var score;
+        var userInput = true;
 
-        function changeLetter() {
-            letterKey = Math.round(Math.random() * (letters.length - 1));
-            letterPlacement.html(letters[letterKey]);
-        }
-
-        timeOut = setTimeout(changeLetter, level * 100);
-
-        this.show = function () {                       //it's possible tu use it like public because of THIS
-            view.removeClass('hidden');                 //removes hidden class (from bootstrap) that you could see the view
+        this.show = function () {
+            view.removeClass('hidden').prepend('<h2>' + name + '</h2>' + '<h3>' + level + " seconds" + '</h3>');
+            liveCount = 3;
+            score = 0;
+            changeLetter();
             enable();
         };
 
-        this.hide = function () {                       //removed before, now we need to add the same class
+        this.hide = function () {
             view.addClass('hidden');
-            disable();
         };
 
-        function enable()
-        {
-            button.click(function () {
-                level = $('input[name = optionsRadios]:checked').val();
-                changeState(STATE_GAME)
-            });
+        function updateScore() {
+            score += 1;
+            $('#score').html(score);
         }
 
-        function disable() {
-            button.unbind();
+        function removeLive() {
+            liveCount -= 1;
+            if (liveCount === 0){
+                changeState(STATE_GAME_OVER)
+            } else {
+                $('#liveScore').html(liveCount);
+            }
+        }
+
+        function enable() {
+            $(window).keyup(function (e) {
+                if (e.key === letters[letterKey]){
+                    updateScore()
+                } else {
+                    removeLive();
+                }
+                userInput = true;
+                changeLetter();
+            })
+        }
+
+        function changeLetter() {
+
+            if (liveCount < 0)
+                return;
+
+            clearTimeout(timeOut);
+            letterKey = Math.round(Math.random() * (letters.length - 1));
+            letterPlacement.html(letters[letterKey]);
+            timeOut = setTimeout(changeLetter, level*1000);
+
+            if (!userInput){
+                removeLive();
+            }
+            userInput = false;
         }
     };
 
-    //-----------------------------------------------------------------Changing a state ----------------------------------------------------------------------
+
+    var game = new GameLogics();
+
+    //-------------------------------------------------------------- Game Over -------------------------------------------------
+
+    var GameOverLogics = function () {
+        var view = $('#over');
+        var lastText = 'Oop.. you just lost the game:)';
+
+        this.show = function () {
+            view.removeClass('hidden');
+        };
+
+        this.hide = function () {
+            view.addClass('hidden')
+        };
+
+        $('#textOver').html(lastText);
+    };
+
+
+    var gameOver = new GameOverLogics();
+
+    //----------------------------------------------------------------- Changing a state ---------------------------------------
 
     /**
      * For states use
@@ -175,9 +224,11 @@ var FastTyping = function () {
                 break;
 
             case STATE_GAME:
+                lastState = game;
                 break;
 
             case STATE_GAME_OVER:
+                lastState = gameOver;
                 break;
         }
 
