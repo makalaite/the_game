@@ -118,6 +118,12 @@ var FastTyping = function () {
         var liveCount;
         var score;
         var userInput = true;
+        var is_golden;
+        var letterApperance;
+        var keyUpTime;
+        var amount;
+        var prise = '<img src=https://img.lrytas.lt/show_foto/?f=4&s=19&id=1697341>';
+
 
         this.show = function () {
             view.removeClass('hidden').prepend('<h2>' + name + '</h2>' + '<h3>' + level + " seconds" + '</h3>');
@@ -129,21 +135,60 @@ var FastTyping = function () {
 
         this.hide = function () {
             view.addClass('hidden');
+            disable();
         };
 
         function updateScore() {
-            score += 1;
+
             $('#score').html(score);
+
+            /**
+             * adds 1 live every 20 scores
+             */
+
+            if (score % 20 === 0){
+                liveCount += 1;
+                $('#liveScore').html(liveCount);
+            }
+
+            /**
+             * turns variable into opposite that i would start to spin from negative value and gives 5 points if it's true
+             */
+            if (is_golden){
+                is_golden = false;
+                for (var i = 0; i < 5; i++){
+                    updateScore();
+                }
+            } else {
+                score += 1;
+            }
+
+            if (score === 10){
+                victory();
+            }
         }
+
+        /**
+         * if live is 0, redirects to game over state
+         */
 
         function removeLive() {
             liveCount -= 1;
             if (liveCount === 0){
                 changeState(STATE_GAME_OVER)
-            } else {
-                $('#liveScore').html(liveCount);
             }
+
+            $('#liveScore').html(liveCount);
         }
+
+        function disable() {
+            $(window).unbind();
+            clearTimeout(timeOut);
+        }
+
+        /**
+         *
+         */
 
         function enable() {
             $(window).keyup(function (e) {
@@ -152,6 +197,14 @@ var FastTyping = function () {
                 } else {
                     removeLive();
                 }
+
+                /**
+                 * setting time for key up before new letter appearance
+                 * @type {number}
+                 */
+                keyUpTime = Date.now();
+                setTime();
+
                 userInput = true;
                 changeLetter();
             })
@@ -165,12 +218,35 @@ var FastTyping = function () {
             clearTimeout(timeOut);
             letterKey = Math.round(Math.random() * (letters.length - 1));
             letterPlacement.html(letters[letterKey]);
+            letterApperance = Date.now();                                       //setting time when a letter appears
             timeOut = setTimeout(changeLetter, level*1000);
 
             if (!userInput){
                 removeLive();
             }
             userInput = false;
+
+            if (Math.random() < 0.1){
+                is_golden = true;
+                letterPlacement.addClass('golden');
+            } else {
+                is_golden = false;
+                letterPlacement.removeClass('golden');
+            }
+        }
+
+        function setTime() {
+
+            console.log(keyUpTime, letterApperance);
+
+            amount = (keyUpTime - letterApperance) * 0.001;
+            $('#time').html(amount);
+        }
+
+        function victory() {
+            $('#gift').html(prise);
+            // return $('#gift').html(prise);
+
         }
     };
 
@@ -182,6 +258,7 @@ var FastTyping = function () {
     var GameOverLogics = function () {
         var view = $('#over');
         var lastText = 'Oop.. you just lost the game:)';
+        var again = $('#again');
 
         this.show = function () {
             view.removeClass('hidden');
@@ -192,6 +269,10 @@ var FastTyping = function () {
         };
 
         $('#textOver').html(lastText);
+
+        again.click(function () {
+            changeState(STATE_REGISTER)
+        });
     };
 
 

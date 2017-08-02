@@ -68,3 +68,14 @@
     font-family: 'Indie Flower', cursive;
     background-color: lightblue;
 }
+
+.golden
+{
+    color: gold;
+}
+
+#gift
+{
+    width: 500px;
+    height: 400px;
+}
