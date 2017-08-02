@@ -20,7 +20,7 @@
 
 <div id="level" class="hidden">
 
-    <legend>Choose a level</legend>
+    <legend>Choose a level, <span id="nickname"></span></legend>
     <div class="form-check">
         <br/>
         <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value=9>
@@ -41,9 +41,10 @@
 
 <div id="game" class="hidden">
 
+    <h3 id="user"> chose <span id="levelIs"> </span> </h3>
+    <h4> score is: <span id="score">0</span> </h4>
     <h1 id="letter"></h1>
-    <h4>score <span id="score">0</span> </h4>
-    <h4>liveScore <span id="liveScore">3</span> </h4>
+    <h4>You still have <span id="liveScore"><b> 3 </b></span> lives to live</h4>
     <h5> your time is: <span id="time">  </span> </h5>
 
     <div id="gift"></div>

@@ -66,8 +66,11 @@ var FastTyping = function () {
         }
     };
 
-    var register = new RegisterLogics();                //initializing object. now u can call it with this variable. it's prepared for using in switch.
-                                                        //possible to create object only after describing function name.
+    /** initializing object. now u can call it with this variable. it's prepared for using in switch.
+     * possible to create object only after describing function name.
+     * @type {RegisterLogics}
+     */
+    var register = new RegisterLogics();
 
     //---------------------------------------------------------- Select Level ----------------------------------------------------------------
 
@@ -78,9 +81,9 @@ var FastTyping = function () {
 
 
         this.show = function () {                                                        //it's possible tu use it like public because of THIS
-            view.removeClass('hidden').prepend('Player name: ' + name);                 //removes hidden class (from bootstrap) that you could see the view
+            view.removeClass('hidden');                                                  //removes hidden class (from bootstrap) that you could see the view
+            $('#nickname').html(name);
             enable();
-
         };
 
         this.hide = function () {                                                   //removed before, now we need to add the same class
@@ -88,8 +91,8 @@ var FastTyping = function () {
             disable();
         };
 
-        /**
-         * will be checking the value.length of input and will activate the button after
+        /** var level with checkbox value defined by them names;
+         * enables chosen inputs value and changes state
          */
         function enable()
         {
@@ -115,20 +118,26 @@ var FastTyping = function () {
         var timeOut;
         var letterPlacement = $('#letter');
         var letterKey;
+
         var liveCount;
         var score;
+
         var userInput = true;
         var is_golden;
-        var letterApperance;
+
+        var letterAppearance;
         var keyUpTime;
         var amount;
         var prise = '<img src=https://img.lrytas.lt/show_foto/?f=4&s=19&id=1697341>';
 
 
         this.show = function () {
-            view.removeClass('hidden').prepend('<h2>' + name + '</h2>' + '<h3>' + level + " seconds" + '</h3>');
+            view.removeClass('hidden');
             liveCount = 3;
             score = 0;
+            $('#user').html(name);
+            $('#levelIs').html(level);
+
             changeLetter();
             enable();
         };
@@ -163,7 +172,7 @@ var FastTyping = function () {
                 score += 1;
             }
 
-            if (score === 10){
+            if (score === 150){
                 victory();
             }
         }
@@ -218,7 +227,7 @@ var FastTyping = function () {
             clearTimeout(timeOut);
             letterKey = Math.round(Math.random() * (letters.length - 1));
             letterPlacement.html(letters[letterKey]);
-            letterApperance = Date.now();                                       //setting time when a letter appears
+            letterAppearance = Date.now();                                       //setting time when a letter appears
             timeOut = setTimeout(changeLetter, level*1000);
 
             if (!userInput){
@@ -236,20 +245,14 @@ var FastTyping = function () {
         }
 
         function setTime() {
-
-            console.log(keyUpTime, letterApperance);
-
-            amount = (keyUpTime - letterApperance) * 0.001;
+            amount = (keyUpTime - letterAppearance) * 0.001;
             $('#time').html(amount);
         }
 
         function victory() {
             $('#gift').html(prise);
-            // return $('#gift').html(prise);
-
         }
     };
-
 
     var game = new GameLogics();
 
@@ -257,7 +260,7 @@ var FastTyping = function () {
 
     var GameOverLogics = function () {
         var view = $('#over');
-        var lastText = 'Oop.. you just lost the game:)';
+        var lastText = 'Oops.. you just lost the game:)';
         var again = $('#again');
 
         this.show = function () {
@@ -274,8 +277,7 @@ var FastTyping = function () {
             changeState(STATE_REGISTER)
         });
     };
-
-
+    
     var gameOver = new GameOverLogics();
 
     //----------------------------------------------------------------- Changing a state ---------------------------------------
